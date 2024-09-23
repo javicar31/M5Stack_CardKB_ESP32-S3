@@ -1,5 +1,7 @@
 # M5Stack_CardKB_ESP32-S3
 M5Stack CardKB used with ESP32-S3 as a USB or Bluetooth Keyboard. Xiao ESP32-S3 or QTPY ESP32-S3
+-This is a project that aims to use the M5Stack Keyboard as a wired/wireless keyboard. So far ive been able to connect the keyboard though usb and bluetooth to devices but i cant do both at the same time due to library incompatibilities.
+
 Things to note:
 - If youre connecting the CardKB directly with I2C on the QTPY STEMMA port remember to change WIRE with WIRE1
 - Bluetooth program wont run unless you heavily modify your library folder. eventually i will upload the library modifications.
