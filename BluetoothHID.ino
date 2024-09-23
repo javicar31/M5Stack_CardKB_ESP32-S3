@@ -152,27 +152,3 @@ void fadeBlue() {
     pixels.show();
   }
 }
-
-void fadeToBlue() {
-  unsigned long currentMillis = millis();
-  if (currentMillis - lastFadeTime >= 10) {  // Adjust delay to change fading speed
-    lastFadeTime = currentMillis;
-    if (fadingUp) {
-      brightness += fadeAmount;
-      if (brightness >= 50) {  // Max brightness
-        brightness = 50;
-        fadingUp = false;
-      }
-    } else {
-      brightness -= fadeAmount;
-      if (brightness <= 0) {  // Min brightness
-        brightness = 0;
-        fadingUp = true;
-      }
-    }
-
-    pixels.setBrightness(brightness);
-    pixels.fill(0x0000FF);  // Solid Blue
-    pixels.show();
-  }
-}
