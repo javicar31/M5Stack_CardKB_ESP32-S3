@@ -112,11 +112,9 @@ void loop() {
       bleKeyboard.write(KEY_RIGHT_ARROW);
       Serial.println("Right Arrow Pressed");
     }
-    else if (key == KEY_ESC+KEY_RIGHT_ARROW) {  // Control key (or adjust as needed)
-      bleKeyboard.press(KEY_LEFT_CTRL);
-      delay(100);  // Short delay
-      bleKeyboard.releaseAll();
-      Serial.println("Control Key Pressed");
+    // Handle Control key combinations
+    else if (key >= 0x80 && key <= 0xAF) {
+      handleCtrlCombination(key);
     }
     else {
       // Send other keys as normal characters
@@ -129,26 +127,90 @@ void loop() {
   delay(50);  // Small delay to prevent flooding
 }
 
+// Function to handle Control key combinations
+void handleCtrlCombination(char key) {
+  bleKeyboard.press(KEY_LEFT_CTRL);
+
+  switch (key) {
+    case 0x81: bleKeyboard.write('1'); break;  // Ctrl + 1
+    case 0x82: bleKeyboard.write('2'); break;  // Ctrl + 2
+    case 0x83: bleKeyboard.write('3'); break;  // Ctrl + 3
+    case 0x84: bleKeyboard.write('4'); break;  // Ctrl + 4
+    case 0x85: bleKeyboard.write('5'); break;  // Ctrl + 5
+    case 0x86: bleKeyboard.write('6'); break;  // Ctrl + 6
+    case 0x87: bleKeyboard.write('7'); break;  // Ctrl + 7
+    case 0x88: bleKeyboard.write('8'); break;  // Ctrl + 8
+    case 0x89: bleKeyboard.write('9'); break;  // Ctrl + 9
+    case 0x8A: bleKeyboard.write('0'); break;  // Ctrl + 0
+    case 0x8B: bleKeyboard.write(KEY_BACKSPACE); break;  // Ctrl + Backspace
+    case 0x8C: bleKeyboard.write(KEY_TAB); break;  // Ctrl + Tab
+    case 0x8D: bleKeyboard.write('q'); break;  // Ctrl + Q
+    case 0x8E: bleKeyboard.write('w'); break;  // Ctrl + W
+    case 0x8F: bleKeyboard.write('e'); break;  // Ctrl + E
+    case 0x90: bleKeyboard.write('r'); break;  // Ctrl + R
+    case 0x91: bleKeyboard.write('t'); break;  // Ctrl + T
+    case 0x92: bleKeyboard.write('y'); break;  // Ctrl + Y
+    case 0x93: bleKeyboard.write('u'); break;  // Ctrl + U
+    case 0x94: bleKeyboard.write('i'); break;  // Ctrl + I
+    case 0x95: bleKeyboard.write('o'); break;  // Ctrl + O
+    case 0x96: bleKeyboard.write('p'); break;  // Ctrl + P
+    case 0x9A: bleKeyboard.write('a'); break;  // Ctrl + A
+    case 0x9B: bleKeyboard.write('s'); break;  // Ctrl + S
+    case 0x9C: bleKeyboard.write('d'); break;  // Ctrl + D
+    case 0x9D: bleKeyboard.write('f'); break;  // Ctrl + F
+    case 0x9E: bleKeyboard.write('g'); break;  // Ctrl + G
+    case 0x9F: bleKeyboard.write('h'); break;  // Ctrl + H
+    case 0xA0: bleKeyboard.write('j'); break;  // Ctrl + J
+    case 0xA1: bleKeyboard.write('k'); break;  // Ctrl + K
+    case 0xA2: bleKeyboard.write('l'); break;  // Ctrl + L
+    case 0xA3: bleKeyboard.write(KEY_RETURN); break;  // Ctrl + Enter
+    case 0xA6: bleKeyboard.write('z'); break;  // Ctrl + Z
+    case 0xA7: bleKeyboard.write('x'); break;  // Ctrl + X
+    case 0xA8: bleKeyboard.write('c'); break;  // Ctrl + C
+    case 0xA9: bleKeyboard.write('v'); break;  // Ctrl + V
+    case 0xAA: bleKeyboard.write('b'); break;  // Ctrl + B
+    case 0xAB: bleKeyboard.write('n'); break;  // Ctrl + N
+    case 0xAC: bleKeyboard.write('m'); break;  // Ctrl + M
+    case 0xAD: bleKeyboard.write(','); break;  // Ctrl + ,
+    case 0xAE: bleKeyboard.write('.'); break;  // Ctrl + .
+    case 0xAF: bleKeyboard.write(KEY_RIGHT_SHIFT); break;  // Ctrl + Shift
+
+    default:
+      Serial.print("Unknown Ctrl combination: ");
+      Serial.println(key);
+      break;
+  }
+
+  bleKeyboard.release(KEY_LEFT_CTRL);
+}
+
+// Function to fade in and out blue color before connection
 void fadeBlue() {
-  unsigned long currentMillis = millis();
-  if (currentMillis - lastFadeTime >= 15) {  // Adjust delay to change fading speed
-    lastFadeTime = currentMillis;
+  unsigned long currentTime = millis();
+  if (currentTime - lastFadeTime >= 30) {  // Adjust the time between fades for smoothness
     if (fadingUp) {
       brightness += fadeAmount;
       if (brightness >= 50) {  // Max brightness
-        brightness = 50;
-        fadingUp = false;
+        fadingUp = false;  // Switch direction
       }
     } else {
       brightness -= fadeAmount;
       if (brightness <= 0) {  // Min brightness
-        brightness = 0;
-        fadingUp = true;
+        fadingUp = true;  // Switch direction
       }
     }
 
+    // Set new brightness
     pixels.setBrightness(brightness);
-    pixels.fill(0x0000FF);  // Solid Blue
+    pixels.fill(0x0000FF);  // Blue color
     pixels.show();
+
+    // Update lastFadeTime
+    lastFadeTime = currentTime;
   }
+}
+
+// Function to revert to blue fading after disconnect
+void fadeToBlue() {
+  firstStart = true;  // Set the first start flag so that fadeBlue function can work again
 }
