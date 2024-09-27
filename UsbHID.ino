@@ -9,7 +9,7 @@ USBHIDKeyboard Keyboard;
 #define CARDKB_I2C_ADDR 0x5F  // I2C address for the M5 CardKB
 
 void setup() {
-  // Start I2C communication on Wire1
+  // Start I2C communication
   Wire.begin();
   
   // Start Serial for debugging
