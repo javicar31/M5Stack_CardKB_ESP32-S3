@@ -1,4 +1,4 @@
-//this wont run unless you have edited your library files, extra brownie points if you make it work.
+
 //By: Javi 2024
 #include <BleKeyboard.h>
 #include <Wire.h>
