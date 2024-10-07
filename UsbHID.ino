@@ -144,4 +144,3 @@ void handleCtrlCombination(char key) {
   Serial.println("Control Key Combination Pressed");
 }
 
-}
