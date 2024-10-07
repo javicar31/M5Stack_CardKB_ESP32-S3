@@ -9,8 +9,8 @@ USBHIDKeyboard Keyboard;
 #define CARDKB_I2C_ADDR 0x5F  // I2C address for the M5 CardKB
 
 void setup() {
-  // Start I2C communication
-  Wire.begin();
+  // Start I2C communication on Wire1
+  Wire1.begin();
   
   // Start Serial for debugging
   Serial.begin(115200);
@@ -22,11 +22,11 @@ void setup() {
 
 void loop() {
   // Request 1 byte of data from CardKB
-  Wire.requestFrom(CARDKB_I2C_ADDR, 1);
+  Wire1.requestFrom(CARDKB_I2C_ADDR, 1);
   
   // If data is available from CardKB
-  if (Wire.available()) {
-    char key = Wire.read();
+  if (Wire1.available()) {
+    char key = Wire1.read();
     
     // Enter key (0x0D)
     if (key == 0x0D) {  
@@ -60,6 +60,10 @@ void loop() {
       Keyboard.write(KEY_RIGHT_ARROW);
       Serial.println("Right Arrow Pressed");
     }
+    // FN key combinations for F1 to F10
+    else if (key >= 0x81 && key <= 0x8A) {
+      handleFnKey(key);
+    }
     // Control key combinations
     else if (key >= 0x80 && key <= 0xAF) {
       handleCtrlCombination(key);
@@ -75,21 +79,29 @@ void loop() {
   delay(100);  // Adjust the delay to optimize performance
 }
 
-// Function to handle Control key combinations using fn key
+// Function to handle FN key combinations for F1 to F10
+void handleFnKey(char key) {
+  switch (key) {
+    case 0x81: Keyboard.write(KEY_F1); break;  // FN + 1 -> F1
+    case 0x82: Keyboard.write(KEY_F2); break;  // FN + 2 -> F2
+    case 0x83: Keyboard.write(KEY_F3); break;  // FN + 3 -> F3
+    case 0x84: Keyboard.write(KEY_F4); break;  // FN + 4 -> F4
+    case 0x85: Keyboard.write(KEY_F5); break;  // FN + 5 -> F5
+    case 0x86: Keyboard.write(KEY_F6); break;  // FN + 6 -> F6
+    case 0x87: Keyboard.write(KEY_F7); break;  // FN + 7 -> F7
+    case 0x88: Keyboard.write(KEY_F8); break;  // FN + 8 -> F8
+    case 0x89: Keyboard.write(KEY_F9); break;  // FN + 9 -> F9
+    case 0x8A: Keyboard.write(KEY_F10); break; // FN + 0 -> F10
+  }
+  Serial.print("Function Key Pressed: F");
+  Serial.println(key - 0x80);  
+}
+
+// Function to handle Control key combinations
 void handleCtrlCombination(char key) {
-  Keyboard.press(KEY_LEFT_CTRL);
+  Keyboard.press(KEY_LEFT_CTRL); 
 
   switch (key) {
-    case 0x81: Keyboard.write('1'); break;  // Ctrl + 1
-    case 0x82: Keyboard.write('2'); break;  // Ctrl + 2
-    case 0x83: Keyboard.write('3'); break;  // Ctrl + 3
-    case 0x84: Keyboard.write('4'); break;  // Ctrl + 4
-    case 0x85: Keyboard.write('5'); break;  // Ctrl + 5
-    case 0x86: Keyboard.write('6'); break;  // Ctrl + 6
-    case 0x87: Keyboard.write('7'); break;  // Ctrl + 7
-    case 0x88: Keyboard.write('8'); break;  // Ctrl + 8
-    case 0x89: Keyboard.write('9'); break;  // Ctrl + 9
-    case 0x8A: Keyboard.write('0'); break;  // Ctrl + 0
     case 0x8B: Keyboard.write(KEY_BACKSPACE); break;  // Ctrl + Backspace
     case 0x8C: Keyboard.write(KEY_TAB); break;  // Ctrl + Tab
     case 0x8D: Keyboard.write('q'); break;  // Ctrl + Q
@@ -128,6 +140,8 @@ void handleCtrlCombination(char key) {
     case 0xA5: Keyboard.write(KEY_RIGHT_ARROW); break; // Ctrl + Right Arrow
   }
 
-  Keyboard.releaseAll();
+  Keyboard.releaseAll(); 
   Serial.println("Control Key Combination Pressed");
+}
+
 }
