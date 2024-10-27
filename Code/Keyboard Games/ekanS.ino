@@ -1,5 +1,5 @@
 //snake game using arrow key to move the snake. Esc to exit the game. 
-//replace any Fn key with: "case 0x86: snakeGame(); break;"
+//replace any Fn key with: "case 0x86: snakeGame(); break;" This one is Fn+6 
 //Javier C. October 2024
 void snakeGame() {
   // Dimensions of the game grid
