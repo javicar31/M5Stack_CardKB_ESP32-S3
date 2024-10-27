@@ -76,7 +76,7 @@ void loop() {
     }
   }
 
-  delay(100);  // Adjust the delay to optimize performance
+  delay(100);  
 }
 
 // Function to handle FN key combinations for F1 to F10
