@@ -62,6 +62,7 @@ void snakeGame() {
     delay(250);
 
     // Handle arrow key inputs for controlling the snake
+    //If you have the keyboard connected through STEMA use Wire1 instead of wire
     Wire.requestFrom(CARDKB_I2C_ADDR, 1);
     if (Wire.available()) {
       char key = Wire.read();
