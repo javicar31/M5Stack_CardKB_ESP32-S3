@@ -222,7 +222,7 @@ void displayGIF() {
       display.clearDisplay();
       display.drawBitmap(0, 0, (uint8_t*)Pokemon[i], 128, 32, SSD1306_WHITE);
       display.display();
-      delay(125);  // Display each frame for 500 milliseconds
+      delay(125);  
 
       // Check for ESC key press
       Wire.requestFrom(CARDKB_I2C_ADDR, 1);
